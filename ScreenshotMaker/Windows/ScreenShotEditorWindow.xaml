@@ -1,0 +1,124 @@
+﻿<Window x:Class="EasyScreenshot.ScreenShotEditorWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:EasyScreenshot"
+        mc:Ignorable="d"
+        Title=""
+        Width="300" Height="300"
+        WindowState="Maximized" WindowStyle="None">
+
+    <Window.CommandBindings>
+        <CommandBinding Command="Close" Executed="CommandBindingClose_Executed"/>
+        <CommandBinding Command="Copy" Executed="CommandBindingCopy_OnExecuted"/>
+        <CommandBinding Command="Save" Executed="CommandBindingSave_OnExecuted"/>
+    </Window.CommandBindings>
+    <Window.InputBindings>
+        <KeyBinding Key="Escape" Command="Close" />
+        <KeyBinding Modifiers="Control" Key="C" Command="Copy"/>
+        <KeyBinding Modifiers="Control" Key="S"/>
+    </Window.InputBindings>
+
+
+    <Grid>
+        <Image x:Name="ImageScreen"/>
+        <Canvas Name="MainCanvas"
+                Background="#80000000"
+                MouseDown="MainCanvas_OnMouseDown" 
+                MouseMove="MainCanvas_OnMouseMove"
+                MouseUp="MainCanvas_OnMouseUp">
+
+            <Grid Name="GridSelectedArea" Visibility="Hidden">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="40"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="40"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="20"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Name="TextBlockAreaSize" 
+                           Background="Black"
+                           Foreground="White"
+                           Width="auto"
+                           Padding="2"
+                           Margin="2,0,0,0"
+                           HorizontalAlignment="Left" Grid.Column="1">
+                    <TextBlock.Text>
+                        <MultiBinding StringFormat="{}{0}x{1}">
+                            <Binding ElementName="RectangleSelectedArea" Path="Width"/>
+                            <Binding ElementName="RectangleSelectedArea" Path="Height"/>
+                        </MultiBinding>
+                    </TextBlock.Text>
+                </TextBlock>
+
+                <Rectangle
+                    Name="RectangleSelectedArea"
+                    Grid.Row="1" Grid.Column="1"
+                    HorizontalAlignment="Left" VerticalAlignment="Top"
+                    Stroke="White" StrokeDashArray="2" StrokeThickness="2"
+                    Fill="#4DFFFFFF"/>
+
+                <Border Name="PanelTools" 
+                        Grid.Row="1" Grid.Column="2"
+                        VerticalAlignment="Bottom" HorizontalAlignment="Center"
+                        Visibility="Hidden"
+                        Padding="4"
+                        Background="#2e2e2e"
+                        CornerRadius="5"
+                        Width="30">
+
+                    <StackPanel>
+                        <StackPanel.Resources>
+                            <Style TargetType="Image">
+                                <Setter Property="RenderOptions.BitmapScalingMode" Value="HighQuality"/>
+                            </Style>
+                            <Style TargetType="Button">
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Setter Property="BorderThickness" Value="0"/>
+                                <Setter Property="Margin" Value="0 3 0 3"/>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border>
+                                                <ContentPresenter 
+                                                Margin="1"
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                RecognizesAccessKey="True"/>
+                                            </Border>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter Property="RenderTransformOrigin" Value="0.5, 0.5"/>
+                                                    <Setter Property="RenderTransform">
+                                                        <Setter.Value>
+                                                            <ScaleTransform ScaleX="1.2" ScaleY="1.2"/>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                    <Setter Property="Cursor" Value="Hand"/>
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </StackPanel.Resources>
+
+                        <Button Command="Save" ToolTip="Save (Ctrl+S)">
+                            <Image Source="../Img/save.png"/>
+                        </Button>
+                        <Button Command="Copy" ToolTip="Copy (Ctrl+C)">
+                            <Image Source="../Img/copy.png"/>
+                        </Button>
+                        <Button Command="Close" ToolTip="Close (Esc)">
+                            <Image Source="../Img/close.png"/>
+                        </Button>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Canvas>
+    </Grid>
+</Window>
